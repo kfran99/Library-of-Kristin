@@ -1,0 +1,33 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1> Register A New Account</h1>
+<form action="{{ url_for('new_user_form') }}" method="post" name="login">
+	{{form.hidden_tag()}}
+	<p>		
+		{{ form.given_name(placeholder="First Name") }}
+	</p>
+	<p>	
+		{{ form.surname(placeholder="Last Name") }}
+	</p>
+	<p> 
+		{{  form.email(placeholder="Email Address") }}
+	</p>
+	<p> 
+		{{  form.password(placeholder="Password") }}
+	</p>
+	<p> 
+		{{  form.password(placeholder="Confirm Password") }}
+	</p>
+
+	<input type="submit" value="Submit">
+	<ul>
+            {% for message in get_flashed_messages() %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+		
+</form>	
+{% endblock %}
