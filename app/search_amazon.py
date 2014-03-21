@@ -8,7 +8,8 @@ def get_book_by_title_author(title, author):
 #http://docs.aws.amazon.com/AWSECommerceService/latest/DG/ItemSearch.html	
 	books = api.item_search("Books", Title=title, 
 		                             Author=author)
-
+	return books
+	#this is going to happen in my controller and iterate through Jinja
 	for book in books:
 		title = book.ItemAttributes.Title
 		author = book.ItemAttributes.Author

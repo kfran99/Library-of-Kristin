@@ -8,3 +8,10 @@ class RegistrationForm(Form):
 	email = StringField("Email Address", [Length(min=6, max=64), Required()])
 	password = PasswordField("Password", [Required(), EqualTo("confirm", message="Passwords must match.")])
 	confirm = PasswordField("Repeat Password")
+
+
+class AmazonSearch(Form):
+	title = StringField("Title", [Required()])
+	author = StringField("Author", [Required()])	
+
+

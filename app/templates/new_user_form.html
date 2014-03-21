@@ -4,7 +4,7 @@
 {% block content %}
 
 <h1> Register A New Account</h1>
-<form action="{{ url_for('new_user_form') }}" method="post" name="login">
+<form action="{{ url_for('new_user_form') }}" method="post" name="new_user_form">
 	{{form.hidden_tag()}}
 	<p>		
 		{{ form.given_name(placeholder="First Name") }}
@@ -13,21 +13,18 @@
 		{{ form.surname(placeholder="Last Name") }}
 	</p>
 	<p> 
-		{{  form.email(placeholder="Email Address") }}
+		{{ form.email(placeholder="Email Address") }}
 	</p>
 	<p> 
-		{{  form.password(placeholder="Password") }}
+		{{ form.password(placeholder="Password") }}
 	</p>
 	<p> 
-		{{  form.password(placeholder="Confirm Password") }}
+		{{ form.confirm(placeholder="Confirm Password") }}
 	</p>
-
-	<input type="submit" value="Submit">
-	<ul>
-            {% for message in get_flashed_messages() %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-		
-</form>	
+	{% for error in form.errors %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}<br>
+	
+	<p><input type="submit" value="Submit"></p>	
+	</form>	
 {% endblock %}
