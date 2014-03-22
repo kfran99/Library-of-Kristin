@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+	<h1> Add a Book </h1>
+	
+	<div id="amazon_results">
+	<table>
+		<tr>
+			<th>Title</th>
+			<th>Author</th>
+			<th>Link to Amazon</th>
+			<th>ASIN</th>
+			<th>Select Book</th>
+		</tr>
+
+	{% for book in amazon_res %}
+	    <tr>
+	    	<td>{{ book.ItemAttributes.Title }}</td>
+	    	<td>{{ book.ItemAttributes.Author }}</td>
+	    	<td>{{ book.DetailPageURL }}</td>
+	    	<td>{{ book.ASIN }}</td>
+	    	<td><a href="{{ url_for('add_book') }}?asin={{ book.ASIN }}&title={{ book.ItemAttributes.Title }}&author={{ book.ItemAttributes.Author }}">Add Book</a></td>
+	    </tr>    
+	{% endfor %}
+	</table>
+	<div><p>{{ amazon_res }}</p>
+	</div>
+{% endblock %}

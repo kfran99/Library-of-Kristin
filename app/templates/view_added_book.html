@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+	<h1> Added Book </h1>
+	
+	<div id="amazon_results">
+	<table>
+		<tr>
+			<th>Title</th>
+			<th>Author</th>
+			<!--<th>Genre</th>-->
+			<!--<th>Description</th>-->
+			<!-- <th>Image</th> -->
+			<th>Link to Amazon</th>
+			<!-- <th>ASIN</th> -->
+		</tr>
+
+	<!-- {% for book in amazon_res %} -->
+	    <tr>
+	    	<td>{{ title }}</td>
+	    	<td>{{ author }}</td>
+	    	<!-- <td>{{ book.DetailPageURL }}</td> -->
+	    	<td>{{ asin }}</td>
+	    </tr>    
+	{% endfor %}
+	</table>
+	<!-- <div><p>{{ amazon_res }}</p> -->
+	</div>
+{% endblock %}
