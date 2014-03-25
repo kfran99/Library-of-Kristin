@@ -13,7 +13,7 @@ def get_book_by_title_author(title, author):
 
 
 def get_book_info(asin):
-	print asin , "asin"
+	#print asin , "asin"
 	#to get image for specific book by ASIN
 	#http://docs.aws.amazon.com/AWSECommerceService/latest/DG/CHAP_response_elements.html#LargeImage	
 	image_url = api.item_lookup(ItemId=asin, 
@@ -29,7 +29,7 @@ def get_book_info(asin):
 	book_genre = api.item_lookup(ItemId=asin, 
 		                         IdType="ASIN",
 		                         ResponseGroup="BrowseNodes")
-	print book_genre.Items.Item.BrowseNodes.BrowseNode.Name
-	print unicode(editorial_review.Items.Item.EditorialReviews.EditorialReview.Content)
-	print image_url.Items.Item.ImageSets.ImageSet.LargeImage.URL
-	return image_url, editorial_review, book_genre
+	genre = book_genre.Items.Item.BrowseNodes.BrowseNode.Name
+	description =  unicode(editorial_review.Items.Item.EditorialReviews.EditorialReview.Content)
+	image = image_url.Items.Item.ImageSets.ImageSet.LargeImage.URL
+	return genre, description, image

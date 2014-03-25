@@ -1,3 +1,4 @@
+import os
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Date
@@ -6,7 +7,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
 from wtforms import Form, BooleanField, StringField, validators
 
-engine = create_engine("sqlite:///books.db", echo=False)
+engine = create_engine(os.environ.get("DATABASE_URL"), echo=False)
 session = scoped_session(sessionmaker(bind=engine,
                                       autocommit = False,
                                       autoflush = False))
@@ -33,5 +34,8 @@ class User(Base):
 	surname = Column(String(30), nullable = False)
 	email = Column(String(64), nullable = False)
 	password = Column(String(64), nullable = False)
+
+
+
 
 

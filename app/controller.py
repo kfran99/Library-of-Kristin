@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, redirect, request, flash, session, url_for
-from model import *
+import model
 from forms import RegistrationForm, AmazonSearch
 from search_amazon import get_book_by_title_author, get_book_info
 
@@ -37,11 +37,21 @@ def add_book():
 	asin = request.args.get("asin")
 	title = request.args.get("title")
 	author = request.args.get("author")
-	image_url, description, genre = get_book_info(asin)
-	print asin, title, author, image_url, description, genre
-	# genre = get_book_info(book_genre.Items.Item.BrowseNodes.BrowseNode.Name)
-	# description = get_book_info(editorial_review.Items.Item.EditorialReviews.EditorialReview.Content)
-	# image_url = get_book_info(image_url.Items.Item.ImageSets.ImageSet.LargeImage.URL)
-	#amazon_url = request.args.get("DetailPageURL")
-	return render_template("view_added_book.html")
+	amazon_url = request.args.get("amazon_url")
 
+	genre, description, image = get_book_info(asin)
+	book = model.Book(title=title,
+	                  author=author,
+	                  genre=genre,
+	                  description=description,
+	                  image_url=image,
+	                  amazon_url=amazon_url,
+	                  asin=asin)
+	# model.session.add()
+	# model.session.commit()
+	return render_template("view_added_book.html", book=book)
+
+
+
+
+	
