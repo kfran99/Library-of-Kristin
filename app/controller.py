@@ -2,6 +2,7 @@ from app import app
 from flask import render_template, redirect, request, flash, session, url_for
 import model
 from forms import RegistrationForm, AmazonSearch
+from wtforms import Form, BooleanField, StringField, validators
 from search_amazon import get_book_by_title_author, get_book_info
 
 @app.route("/")
@@ -25,7 +26,6 @@ def new_user_form():
 def amazon_search():
 	form = AmazonSearch()
 	if form.validate_on_submit():
-		flash ("Information supplied is complete.")
 		books = get_book_by_title_author(form.title.data, form.author.data)
 		#get_book_by_title_author is defined in search_amazon
 		return render_template("amazon_results.html", amazon_res=books)
@@ -38,7 +38,6 @@ def add_book():
 	title = request.args.get("title")
 	author = request.args.get("author")
 	amazon_url = request.args.get("amazon_url")
-
 	genre, description, image = get_book_info(asin)
 	book = model.Book(title=title,
 	                  author=author,
@@ -47,8 +46,14 @@ def add_book():
 	                  image_url=image,
 	                  amazon_url=amazon_url,
 	                  asin=asin)
-	# model.session.add()
-	# model.session.commit()
+	book_exist = model.session.query(model.Book).filter_by(title=title).all()
+	form = AmazonSearch()
+	#if book is already in the database, return to amazon_search
+	if book_exist:	
+	 	flash("Book is already in the database.")
+	 	return render_template("amazon_search.html", form=form)
+	model.session.add(book)
+	model.session.commit()
 	return render_template("view_added_book.html", book=book)
 
 

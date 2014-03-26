@@ -1,13 +1,13 @@
 import os
+from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, DateTime
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
-from wtforms import Form, BooleanField, StringField, validators
 
-engine = create_engine(os.environ.get("DATABASE_URL"), echo=False)
+engine = create_engine(os.environ.get("DATABASE_URL","postgres://localhost/libraryofkristin"), echo=True)
 session = scoped_session(sessionmaker(bind=engine,
                                       autocommit = False,
                                       autoflush = False))
@@ -34,6 +34,23 @@ class User(Base):
 	surname = Column(String(30), nullable = False)
 	email = Column(String(64), nullable = False)
 	password = Column(String(64), nullable = False)
+
+class BookStatus(Base):
+	__tablename__= "status"
+	id = Column(Integer, primary_key = True)
+	book_id = Column(Integer, ForeignKey("books.id"), nullable = False)
+	requester_id = Column(Integer, ForeignKey("users.id"), nullable = False)
+	status = Column(String(64), nullable = False)
+	requested = Column(DateTime, nullable = False, default=datetime.now)
+	checked_out = Column(DateTime, nullable = True) 
+	checked_in = Column(DateTime, nullable = True)
+
+
+def main():
+	Base.metadata.create_all(engine)
+
+if __name__ == "__main__":
+	main()	
 
 
 

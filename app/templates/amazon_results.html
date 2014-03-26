@@ -20,7 +20,7 @@
 	    	<td>{{ book.ItemAttributes.Author }}</td>
 	    	<td>{{ book.DetailPageURL }}</td>
 	    	<td>{{ book.ASIN }}</td>
-	    	<td><a href="{{ url_for('view_book') }}?asin={{ book.ASIN }}&title={{ book.ItemAttributes.Title }}&author={{ book.ItemAttributes.Author }}&amazon_url={{book.DetailPageURL}}">Add Book</a></td>
+	    	<td><a href="{{ url_for('add_book') }}?asin={{ book.ASIN }}&title={{ book.ItemAttributes.Title }}&author={{ book.ItemAttributes.Author }}&amazon_url={{book.DetailPageURL}}">Add Book</a></td>
 	    </tr>    
 	{% endfor %}
 	</table>
