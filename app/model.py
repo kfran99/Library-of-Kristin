@@ -21,7 +21,7 @@ class Book(Base):
 	title = Column(String(256), nullable = False)
 	author = Column(String(128), nullable = False)
 	genre = Column(String(64), nullable = True)
-	description = Column(String(2000), nullable = True)
+	description = Column(String(5000), nullable = True)
 	image_url = Column(String(500), nullable= True)
 	amazon_url = Column(String(500), nullable = True)
 	asin = Column(String(25), nullable = False)
@@ -34,6 +34,7 @@ class User(Base):
 	surname = Column(String(30), nullable = False)
 	email = Column(String(64), nullable = False)
 	password = Column(String(64), nullable = False)
+	admin = Column(Integer, nullable=False, default=0)
 
 class BookStatus(Base):
 	__tablename__= "status"

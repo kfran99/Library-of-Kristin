@@ -1,5 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {% if title %}
     <title>{{title}} Library of Kristin </title>
     {% else %}
@@ -7,7 +11,7 @@
     {% endif %}
   </head>
   <body>
-    <div>Library of Kristin: <a href="/index">Home</a></div>
+    <h1>Library of Kristin: <a href="/index">Home</a></h1>
     <hr>
     {% with messages = get_flashed_messages() %}
     {% if messages %}

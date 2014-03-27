@@ -1,26 +1,75 @@
 from app import app
 from flask import render_template, redirect, request, flash, session, url_for
 import model
-from forms import RegistrationForm, AmazonSearch
+from forms import RegistrationForm, AmazonSearch, LoginForm
 from wtforms import Form, BooleanField, StringField, validators
 from search_amazon import get_book_by_title_author, get_book_info
+from config import *
+import hashlib
 
 @app.route("/")
 @app.route("/index")
 def index():
 	#placeholder for now
-	user = {"given_name": "Kristin"}
+	user = model.session.query(model.User).filter_by(email=session["email"]).one()
 	return render_template("index.html", title="Home", user=user)
 
-
-@app.route("/user/new", methods=["GET", "POST"])
+@app.route("/user/new", methods=["GET"])
 def new_user_form():
 	#Display HTML from to create a new user
 	form = RegistrationForm()
-	if form.validate_on_submit():
-		flash ("Your account has been created, " + form.given_name.data)		
-		return redirect("/index")
 	return render_template("new_user_form.html", form=form)
+
+@app.route("/user/new", methods=["POST"])
+def add_new_user():
+	salt = PASSWORD_SALT
+	#Get data from Registration Form
+	form = RegistrationForm(request.form)
+	if not form.validate():
+		flash("All fields are required.")
+		return render_template("new_user_form.html", form=form)
+	given_name = form.given_name.data
+	surname = form.surname.data
+	email = form.email.data
+	password = hashlib.sha1(form.password.data+salt).hexdigest()
+	print password
+	print email
+	user_exist = model.session.query(model.User).filter_by(email=email).all()
+	#check to see if user exists
+	if user_exist:
+		flash("User account has already been created with this email.")
+		return render_template("login_user.html", form=form)
+	#create user object
+	user = model.User(given_name=given_name, surname=surname, email=email, password=password, admin=0)
+	model.session.add(user)
+	model.session.commit()
+	session["email"] = email
+	if form.validate_on_submit():
+		flash ("Your account has been created, " + form.given_name.data + ".")		
+		return redirect("/index")
+	return redirect("/user/new")
+
+@app.route("/user/login", methods=["GET"])
+def user_login_form():
+	form = LoginForm()
+	return render_template("login_user.html")
+
+@app.route("/user/login", methods=["POST"])
+def user_login():	
+	salt = PASSWORD_SALT
+	form = LoginForm(request.form)
+	email = form.email.data
+	password = hashlib.sha1(form.password.data+salt).hexdigest()
+	user_list = model.session.query(model.User).filter_by(email=email, password=password).all()
+	if user_list:	
+		session["email"] = email
+		given_name = user_list[0].given_name
+		#given_name = request.args.get("given_name")
+		flash("You are authenticated, " + given_name + ".")
+		return redirect("/index")
+	else:
+		flash("User not authenticated.")
+		return render_template("login_user.html")		
 
 @app.route("/book/search", methods=["GET", "POST"])
 def amazon_search():
@@ -35,8 +84,8 @@ def amazon_search():
 @app.route("/book/add", methods=["GET"])
 def add_book():
 	asin = request.args.get("asin")
-	title = request.args.get("title")
-	author = request.args.get("author")
+	title = unicode(request.args.get("title"))
+	author = unicode(request.args.get("author"))
 	amazon_url = request.args.get("amazon_url")
 	genre, description, image = get_book_info(asin)
 	book = model.Book(title=title,
