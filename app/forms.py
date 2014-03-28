@@ -15,6 +15,12 @@ class LoginForm(Form):
 
 class AmazonSearch(Form):
 	title = StringField("Title", [Required()])
-	author = StringField("Author", [Required()])	
+	author = StringField("Author", [Required()])
+
+class BookSearch(Form):
+	title = StringField("Title")
+	author = StringField("Author")
+	#genre = SelectField("Genre", coerce=unicode)
+
 
 

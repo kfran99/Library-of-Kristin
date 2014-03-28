@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+{% extends "base.html" %}
+{% block content %}
+	<h1> Results </h1>
+	<div class="col-md-2">
+	</div>
+	<div id="book_results" class="col-md-8">
+	<table class="table">
+		<tr>
+			<th>Image</th>
+			<th>Title</th>
+			<th>Author</th>
+			<th>Genre</th>
+			<th>Description</th>
+			<th>Request to Borrow</th>
+			<th>Buy from Amazon</th>
+		</tr>
+
+	{% for book in book_results %}
+	    <tr>
+	    	<td><img src="{{ book.image_url}}"></td>
+	    	<td><a href="#">{{book.title}}</a></td>
+	    	<td>{{ book.author }}</td>
+	    	<td>{{ book.genre }}</td>
+	    	<td>{{ book.description }}</td>
+	    	<td></td>
+	    	<td><a href="{{ book.amazon_url }}">Buy from Amazon</a></td>
+	    	
+	    </tr>    
+	{% endfor %}
+	</table>
+{% endblock %}

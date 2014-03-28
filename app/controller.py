@@ -1,9 +1,10 @@
 from app import app
 from flask import render_template, redirect, request, flash, session, url_for
 import model
-from forms import RegistrationForm, AmazonSearch, LoginForm
+from forms import RegistrationForm, AmazonSearch, LoginForm, BookSearch
 from wtforms import Form, BooleanField, StringField, validators
 from search_amazon import get_book_by_title_author, get_book_info
+import config 
 from config import *
 import hashlib
 
@@ -52,7 +53,7 @@ def add_new_user():
 @app.route("/user/login", methods=["GET"])
 def user_login_form():
 	form = LoginForm()
-	return render_template("login_user.html")
+	return render_template("login_user.html", form=form)
 
 @app.route("/user/login", methods=["POST"])
 def user_login():	
@@ -69,9 +70,9 @@ def user_login():
 		return redirect("/index")
 	else:
 		flash("User not authenticated.")
-		return render_template("login_user.html")		
+		return render_template("login_user.html", form=form)		
 
-@app.route("/book/search", methods=["GET", "POST"])
+@app.route("/amazon/search", methods=["GET", "POST"])
 def amazon_search():
 	form = AmazonSearch()
 	if form.validate_on_submit():
@@ -81,7 +82,7 @@ def amazon_search():
 	
 	return render_template("amazon_search.html", form=form)
 
-@app.route("/book/add", methods=["GET"])
+@app.route("/amazon/add_book", methods=["GET"])
 def add_book():
 	asin = request.args.get("asin")
 	title = unicode(request.args.get("title"))
@@ -105,7 +106,20 @@ def add_book():
 	model.session.commit()
 	return render_template("view_added_book.html", book=book)
 
-
-
-
+@app.route("/book/search", methods=["GET", "POST"])
+def book_search_form():
+	form = BookSearch()
+	title = request.form.get("title")
+	#for searching by title
+	if form.validate_on_submit():
+		books = model.session.query(model.Book).filter(model.Book.title.ilike("%"+title+"%")).all()
+		print books
+		if not books:
+			flash("No books were found containing this title.")
+			return render_template("book_search.html", form=form)		
+		return render_template("book_results.html", book_results=books)		
+	return render_template("book_search.html", form=form)	
 	
+
+
+	#form.genre.choices = [(g.genre, g.title) for g in genre.query.order_by()]	

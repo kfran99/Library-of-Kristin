@@ -1,0 +1,21 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1> Search for a Book </h1>
+<form action="{{ url_for('book_search_form') }}" method="post" name="book_search_form">
+	{{form.hidden_tag()}}
+	<p> 
+		{{ form.title(placeholder="Title") }}
+	</p>
+	<p> 
+		{{ form.author(placeholder="Author") }}
+	</p>
+	{% for error in form.errors %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}<br>
+	
+	<p><input type="submit" value="Submit"></p>	
+	</form>	
+{% endblock %}
