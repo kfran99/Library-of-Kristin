@@ -33,6 +33,6 @@ def get_book_info(asin):
 	genre = unicode(book_genre.Items.Item.BrowseNodes.BrowseNode.Name)
 	description_one = unicode(editorial_review.Items.Item.EditorialReviews.EditorialReview.Content)
 	#remove tags from description
-	description = re.sub(r"</?\w+\s?>", "", description_one)
+	description = re.sub(r"<!?-?-?/?\w+\s?\-?-?/?>", " ", description_one)
 	image = unicode(image_url.Items.Item.ImageSets.ImageSet.LargeImage.URL)
 	return genre, description, image

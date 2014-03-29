@@ -12,6 +12,13 @@
 	<p> 
 		{{ form.author(placeholder="Author") }}
 	</p>
+	<p>
+		<select name="Genre">
+		{% for genre in genres %}	
+  			<option value="{{ genre }}">{{genre}}</option>
+  		{% endfor %}	
+  		</select>
+  	</p>	 		
 	{% for error in form.errors %}
         <span style="color: red;">[{{error}}]</span>
         {% endfor %}<br>

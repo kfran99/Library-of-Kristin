@@ -7,6 +7,7 @@ from search_amazon import get_book_by_title_author, get_book_info
 import config 
 from config import *
 import hashlib
+from sqlalchemy import distinct
 
 @app.route("/")
 @app.route("/index")
@@ -110,16 +111,33 @@ def add_book():
 def book_search_form():
 	form = BookSearch()
 	title = request.form.get("title")
-	#for searching by title
-	if form.validate_on_submit():
-		books = model.session.query(model.Book).filter(model.Book.title.ilike("%"+title+"%")).all()
-		print books
-		if not books:
-			flash("No books were found containing this title.")
-			return render_template("book_search.html", form=form)		
-		return render_template("book_results.html", book_results=books)		
-	return render_template("book_search.html", form=form)	
+	author = request.form.get("author")
+	genre = request.form.get("genre")
 	
+	genres = model.session.query(distinct(model.Book.genre)).all()
+	  	
 
+	if form.validate_on_submit():
+		books_title = model.session.query(model.Book).filter(model.Book.title.ilike("%"+title+"%")).all()
+		books_author = model.session.query(model.Book).filter(model.Book.author.ilike("%"+author+"%")).all()
+		books_genre = model.session.query(model.Book.genre).distinct()
+		books_query = model.session.query(model.Book)
+		
+		if books_title:
+			books_query = books_query.filter(model.Book.title.ilike("%"+title+"%"))
 
-	#form.genre.choices = [(g.genre, g.title) for g in genre.query.order_by()]	
+		if books_author:
+			books_query = books_query.filter(model.Book.author.ilike("%"+author+"%"))
+		
+		if books_genre:
+			books_query =model.session.query(distinct(model.Book.genre)).all()	
+		
+		books = books_query.all()
+
+		if not books:
+			flash("No books were found matching your search terms.")
+			return render_template("book_search.html", form=form, genres=genres)		
+		return render_template("book_results.html", book_results=books)
+
+	return render_template("book_search.html", form=form, genres=genres)	
+

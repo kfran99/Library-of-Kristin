@@ -18,7 +18,7 @@
 	    <tr>
 	    	<td>{{ book.ItemAttributes.Title }}</td>
 	    	<td>{{ book.ItemAttributes.Author }}</td>
-	    	<td>{{ book.DetailPageURL }}</td>
+	    	<td><a href="{{ book.DetailPageURL }}">Amazon URL</a></td>
 	    	<td>{{ book.ASIN }}</td>
 	    	<td><a href="{{ url_for('add_book') }}?asin={{ book.ASIN }}&title={{ book.ItemAttributes.Title }}&author={{ book.ItemAttributes.Author }}&amazon_url={{book.DetailPageURL}}">Add Book</a></td>
 	    </tr>    

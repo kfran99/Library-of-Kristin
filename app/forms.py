@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import BooleanField, StringField, PasswordField, validators
+from wtforms import BooleanField, StringField, PasswordField, validators, SelectField
 from wtforms.validators import Required, Length, EqualTo
 
 class RegistrationForm(Form):
@@ -20,7 +20,7 @@ class AmazonSearch(Form):
 class BookSearch(Form):
 	title = StringField("Title")
 	author = StringField("Author")
-	#genre = SelectField("Genre", coerce=unicode)
+	genre = SelectField("Genre", coerce=unicode)
 
 
 
