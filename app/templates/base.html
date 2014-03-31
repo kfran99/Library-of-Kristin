@@ -17,10 +17,16 @@
     <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <div class="collapse navbar-collapse">
+        <a href="{{ url_for("index") }}"></a>
     <!-- Brand and toggle get grouped for better mobile display -->
     <ul class="nav navbar-nav navbar-default">
+        <!-- Check for user in session. Display log in or log out depending on the status of the session. -->
+        {% if "email" in session %}
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+            <li><a href="{{ url_for('user_login') }}">Login</a></li>
+        {% endif %}     
         <li><a href="/amazon/search">Amazon Search</a></li>
-        <li><a href="/user/login">Login</a></li>
         <li><a href="/user/new">Create Account</a></li>
         <li><a href="/book/search">Search for a Book</a></li>
      </ul>   

@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, redirect, request, flash, session, url_for
+from flask import render_template, redirect, request, flash, session, url_for, escape
 import model
 from forms import RegistrationForm, AmazonSearch, LoginForm, BookSearch
 from wtforms import Form, BooleanField, StringField, validators
@@ -9,11 +9,10 @@ from config import *
 import hashlib
 from sqlalchemy import distinct
 
-@app.route("/")
 @app.route("/index")
 def index():
-	#placeholder for now
 	user = model.session.query(model.User).filter_by(email=session["email"]).one()
+	
 	return render_template("index.html", title="Home", user=user)
 
 @app.route("/user/new", methods=["GET"])
@@ -66,12 +65,30 @@ def user_login():
 	if user_list:	
 		session["email"] = email
 		given_name = user_list[0].given_name
-		#given_name = request.args.get("given_name")
 		flash("You are authenticated, " + given_name + ".")
 		return redirect("/index")
 	else:
 		flash("User not authenticated.")
-		return render_template("login_user.html", form=form)		
+		return render_template("login_user.html", form=form)
+
+@app.route("/user/logout")
+def logout():
+	# user = model.session.query(model.User).filter_by(email=session["email"].one()
+	session.pop(session["email"], None)
+	flash("You are now logged out.")
+	return redirect("/index")
+
+
+# @app.route("/user/<id>", methods=["POST"])
+# def update_user(id):
+# 	current_user = User.Query.get(id)
+# 	if not current_user:	
+# 		flash ("You are not logged in.")
+# 	return render_template("update_user.html", current_user=current_user)
+		
+
+		
+
 
 @app.route("/amazon/search", methods=["GET", "POST"])
 def amazon_search():
@@ -112,15 +129,15 @@ def book_search_form():
 	form = BookSearch()
 	title = request.form.get("title")
 	author = request.form.get("author")
-	genre = request.form.get("genre")
+	# genre = request.form.get("genre")
 	
-	genres = model.session.query(distinct(model.Book.genre)).all()
+	# genres = model.session.query(distinct(model.Book.genre)).all()
 	  	
 
 	if form.validate_on_submit():
 		books_title = model.session.query(model.Book).filter(model.Book.title.ilike("%"+title+"%")).all()
 		books_author = model.session.query(model.Book).filter(model.Book.author.ilike("%"+author+"%")).all()
-		books_genre = model.session.query(model.Book.genre).distinct()
+		# books_genre = model.session.query(model.Book.genre).distinct()
 		books_query = model.session.query(model.Book)
 		
 		if books_title:
@@ -129,15 +146,17 @@ def book_search_form():
 		if books_author:
 			books_query = books_query.filter(model.Book.author.ilike("%"+author+"%"))
 		
-		if books_genre:
-			books_query =model.session.query(distinct(model.Book.genre)).all()	
+		# if books_genre:
+		# 	books_query =model.session.query(distinct(model.Book.genre)).all()	
 		
 		books = books_query.all()
 
 		if not books:
 			flash("No books were found matching your search terms.")
-			return render_template("book_search.html", form=form, genres=genres)		
+			return render_template("book_search.html", form=form)
+				# genres=genres)		
 		return render_template("book_results.html", book_results=books)
 
-	return render_template("book_search.html", form=form, genres=genres)	
+	return render_template("book_search.html", form=form)
+	# , genres=genres)	
 

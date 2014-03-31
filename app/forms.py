@@ -20,7 +20,7 @@ class AmazonSearch(Form):
 class BookSearch(Form):
 	title = StringField("Title")
 	author = StringField("Author")
-	genre = SelectField("Genre", coerce=unicode)
+	#genre = SelectField("Genre", coerce=unicode)
 
 
 

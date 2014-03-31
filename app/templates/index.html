@@ -1,4 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Hello, {{user.given_name}}!</h1>
+	{% if "email" in session %}
+    	<h1>Hello, {{user.given_name}}!</h1>
+    {% else %}
+        <li>Hello. Please login to search for a book to borrow</a></li>
+        {% endif %}   
 {% endblock %}
