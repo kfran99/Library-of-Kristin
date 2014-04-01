@@ -25,8 +25,10 @@
             <li><a href="{{ url_for('logout') }}">Logout</a></li>
         {% else %}
             <li><a href="{{ url_for('user_login') }}">Login</a></li>
-        {% endif %}     
-        <li><a href="/amazon/search">Amazon Search</a></li>
+        {% endif %}
+        {% if session['admin'] %}
+            <li><a href="/amazon/search">Amazon Search</a></li>  
+        {% endif %}            
         <li><a href="/user/new">Create Account</a></li>
         <li><a href="/book/search">Search for a Book</a></li>
      </ul>   

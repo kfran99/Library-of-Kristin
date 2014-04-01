@@ -9,10 +9,14 @@ from config import *
 import hashlib
 from sqlalchemy import distinct
 
+
+@app.route("/")
 @app.route("/index")
 def index():
-	user = model.session.query(model.User).filter_by(email=session["email"]).one()
-	
+	if "email" in session:
+		user = model.session.query(model.User).filter_by(email=session["email"]).one()
+	else:
+		user = None
 	return render_template("index.html", title="Home", user=user)
 
 @app.route("/user/new", methods=["GET"])
@@ -64,6 +68,10 @@ def user_login():
 	user_list = model.session.query(model.User).filter_by(email=email, password=password).all()
 	if user_list:	
 		session["email"] = email
+		if user_list[0].admin == 1:
+			session["admin"] = True
+		else:
+			session["admin"] = False
 		given_name = user_list[0].given_name
 		flash("You are authenticated, " + given_name + ".")
 		return redirect("/index")
@@ -74,7 +82,7 @@ def user_login():
 @app.route("/user/logout")
 def logout():
 	# user = model.session.query(model.User).filter_by(email=session["email"].one()
-	session.pop(session["email"], None)
+	session.clear()
 	flash("You are now logged out.")
 	return redirect("/index")
 
@@ -86,19 +94,18 @@ def logout():
 # 		flash ("You are not logged in.")
 # 	return render_template("update_user.html", current_user=current_user)
 		
-
-		
-
-
 @app.route("/amazon/search", methods=["GET", "POST"])
 def amazon_search():
-	form = AmazonSearch()
-	if form.validate_on_submit():
-		books = get_book_by_title_author(form.title.data, form.author.data)
-		#get_book_by_title_author is defined in search_amazon
-		return render_template("amazon_results.html", amazon_res=books)
-	
-	return render_template("amazon_search.html", form=form)
+	if session['admin']:
+		form = AmazonSearch()
+		if form.validate_on_submit():
+			books = get_book_by_title_author(form.title.data, form.author.data)
+			#get_book_by_title_author is defined in search_amazon
+			return render_template("amazon_results.html", amazon_res=books)
+		else:
+			return render_template("amazon_search.html", form=form)
+	else:
+		return "CAN'T DO THAT, SUCKA"
 
 @app.route("/amazon/add_book", methods=["GET"])
 def add_book():
