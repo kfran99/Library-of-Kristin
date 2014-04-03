@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -28,8 +29,13 @@
         {% endif %}
         {% if session['admin'] %}
             <li><a href="/amazon/search">Amazon Search</a></li>  
-        {% endif %}            
-        <li><a href="/user/new">Create Account</a></li>
+        {% endif %}
+        {% if "email" in session %}
+            <li><a href="#">Update Account</a></li>
+        {% endif %}    
+        {% if "email" not in session %}            
+            <li><a href="/user/new">Create Account</a></li>
+        {% endif %}    
         <li><a href="/book/search">Search for a Book</a></li>
      </ul>   
     </div>

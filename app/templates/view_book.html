@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-	<h1> Results </h1>
+	<h1>BOOK</h1>
 	<div class="col-md-2">
 	</div>
-	<div id="book_results" class="col-md-8">
+	<div id="book" class="col-md-8">
 	<table class="table">
 		<tr>
 			<th>Image</th>
@@ -15,17 +15,16 @@
 			<th>Buy from Amazon</th>
 		</tr>
 
-	{% for book in book_results %}
+
 	    <tr>
 	    	<td><img src="{{ book.image_url}}"></td>
-	    	<td><a href="/book/{{ book.id }}">{{book.title}}</a></td>
+	    	<td>{{ book.title }}</td>
 	    	<td>{{ book.author }}</td>
 	    	<td>{{ book.genre }}</td>
 	    	<td>{{ book.description }}</td>
-	    	<td></td>
+	    	<td>{{ book.status }}</td>
 	    	<td><a href="{{ book.amazon_url }}">Buy from Amazon</a></td>
 	    		    	
 	    </tr>    
-	{% endfor %}
 	</table>
 {% endblock %}

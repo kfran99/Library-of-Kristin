@@ -15,6 +15,7 @@ from sqlalchemy import distinct
 def index():
 	if "email" in session:
 		user = model.session.query(model.User).filter_by(email=session["email"]).one()
+		#user_books_status = model.session.query(model.BookStatus).filter_by(BookStatus.requester_id = user.id, BookStatus.id = book.id).all()
 	else:
 		user = None
 	return render_template("index.html", title="Home", user=user)
@@ -93,6 +94,7 @@ def logout():
 # 	if not current_user:	
 # 		flash ("You are not logged in.")
 # 	return render_template("update_user.html", current_user=current_user)
+
 		
 @app.route("/amazon/search", methods=["GET", "POST"])
 def amazon_search():
@@ -105,7 +107,7 @@ def amazon_search():
 		else:
 			return render_template("amazon_search.html", form=form)
 	else:
-		return "CAN'T DO THAT, SUCKA"
+		return "You are not authorized to do this."
 
 @app.route("/amazon/add_book", methods=["GET"])
 def add_book():
@@ -165,5 +167,33 @@ def book_search_form():
 		return render_template("book_results.html", book_results=books)
 
 	return render_template("book_search.html", form=form)
-	# , genres=genres)	
+	# , genres=genres)
+
+@app.route("/book/<id>", methods=["GET"])
+def view_book(id):
+	book = model.session.query(model.Book).get(id)
+	user = model.session.query(model.User).filter_by(email=session["email"]).one()
+	status = book.get_status()
+	print "HEY! STATUS!", status
+	return render_template("view_book.html", book=book, status = status)
+	
+	
+
+
+
+@app.route("/book/request", methods=["POST"])
+def book_request(id):
+	if session["email"]:
+		requester = model.session.query(model.User.get.id)
+		status = model.session.query(model.Status).filter_by(book_id=book.id).all()
+		book = model.session.query(model.Book.get.id)
+		book_available = model.session.query(model.BookStatus).filter_by(book_id=book.id, )
+		new_request = BookStatus(book_id=book.id, requester_id=requester.id)
+		model.session.add(new_request)
+		model.session.commit()
+	pass
+
+
+		
+
 

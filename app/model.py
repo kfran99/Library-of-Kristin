@@ -26,6 +26,11 @@ class Book(Base):
 	amazon_url = Column(String(500), nullable = True)
 	asin = Column(String(25), nullable = False)
 
+	def get_status(self):
+		checked_out_books = BookStatus.query.filter_by(book_id=self.id, checked_in=None).all()
+		if len(checked_out_books) > 0:
+			return "Checked Out"
+		return "Available"
 
 class User(Base):
 	__tablename__= "users"
@@ -34,17 +39,21 @@ class User(Base):
 	surname = Column(String(30), nullable = False)
 	email = Column(String(64), nullable = False)
 	password = Column(String(64), nullable = False)
-	admin = Column(Integer, nullable=False, default=0)
+	admin = Column(Integer, nullable = False, default = 0)
 
 class BookStatus(Base):
 	__tablename__= "status"
 	id = Column(Integer, primary_key = True)
 	book_id = Column(Integer, ForeignKey("books.id"), nullable = False)
 	requester_id = Column(Integer, ForeignKey("users.id"), nullable = False)
-	status = Column(String(64), nullable = False)
 	requested = Column(DateTime, nullable = False, default=datetime.now)
 	checked_out = Column(DateTime, nullable = True) 
 	checked_in = Column(DateTime, nullable = True)
+	requester = relationship("User", backref = backref("history", order_by = checked_out))
+	book = relationship("Book", backref = backref("history", order_by = checked_out))
+
+
+#Later can add model to have users create a library of books to loan			
 
 
 def main():
