@@ -9,8 +9,12 @@ from config import *
 import hashlib
 from sqlalchemy import distinct
 from datetime import datetime
-import smtplib
+from twilio.rest import TwilioRestClient
 
+
+client = TwilioRestClient(config.account_sid, config.auth_token)
+my_phone = config.my_phone
+twilio_phone = config.twilio_phone
 
 @app.route("/")
 @app.route("/index")
@@ -211,30 +215,29 @@ def book_request(id):
 		new_request = model.BookStatus(book_id=book.id, requester_id=requester.id)
 		model.session.add(new_request)
 		model.session.commit()
-
-		# Send email here
-
+		flash ("You have requested to borrow this book.")
+		# Send Twilio message when someone requests to borrow a book
+		message = client.messages.create(body="Kristin, " + requester.given_name + 
+			                             " " + requester.surname + 
+			                             " has requested to borrow the book: " 
+			                             + book.title + ".",
+			                             to=my_phone, 
+			                             from_=twilio_phone)			
 	return redirect(url_for("view_book", id=id)) 
 
 @app.route("/book/<id>/update_status", methods=["GET"])
 def book_update_status(id):	
-	if session["email"]:
+	if session['admin']:
 		book = model.session.query(model.Book).get(id)
 		requester = model.session.query(model.User).filter_by(email=session["email"]).one()
-		status = model.session.query(model.BookStatus).filter_by(book_id=book.id, requester_id=requester.id, checked_in=None).all()
-		status = status[-1]
-		if status.checked_in == None:
-			status.checked_in = datetime.now()		
+		status = model.session.query(model.BookStatus).filter_by(book_id=book.id, checked_in=None).all()
+		for s in status:
+			if s.checked_in == None:
+				s.checked_in = datetime.now()		
 		model.session.commit()
 	return redirect(url_for("view_book", id=id))
 
 
-# update status set checked_out = now(), checked_in = now() where book_id = 61 
-#and requester_id = 1 and checked_in IS NULL;
-
-
-
-		
 
 
 

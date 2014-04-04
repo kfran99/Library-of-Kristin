@@ -15,7 +15,7 @@
 				<th>Request to Borrow</th>
 			{% endif %}
 			<th>Availability</th>
-			{% if session['admin'] and status=="Checked Out" %}
+			{% if session['admin'] and status == "Checked Out" %}
 				<th>Check in Book</th>
 			{% endif %}
 			<th>Buy from Amazon</th>
@@ -33,13 +33,11 @@
 	    	{% endif %}	
 	    	<td>{{ status }}<br/><br/>
 	    		<p>
-	    		This book has been checked out: {{ book.history | length }} times.</p>
-	    	{% if session['admin'] and status=="Checked Out" %}
-	    		<td><a href="{{url_for('book_update_status', id=book.id, status = status) }}">Check in Book</a></td>
-			{% endif %}	
-	    	</td>
-	    	<td><a href="{{ book.amazon_url }}">Buy from Amazon</a></td>
-	    		    	
-	    </tr>    
+	    		This book has been checked out: {{ book.history | length }} times.</p></td>
+	    	{% if session['admin'] and status == "Checked Out" %}
+	    		<td><a href="{{url_for('book_update_status', id = book.id, status = status) }}">Check in Book</a></td>
+			{% endif %}
+			<td><a href="{{ book.amazon_url }}">Buy from Amazon</a></td>
+		</tr>    
 	</table>
 {% endblock %}
