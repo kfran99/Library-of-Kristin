@@ -1,4 +1,4 @@
-*.pyc
+app/*.pyc
 .DS_Store
 config.py
 .amazon-product-api

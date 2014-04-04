@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 	<h1> View Added Book Details </h1>
-	
-	<div>
-	<table>
+	<div class="col-md-2">
+	</div>
+	<div class="col-md-12">
+	<table class="table">
 		<tr>
 			<th>Title</th>
 			<th>Author</th>
@@ -17,13 +18,10 @@
 	    	<td>{{ book.author }}</td>
 	    	<td>{{ book.genre }}</td>
 	    	<td>{{ book.description}}</td>
-	    	<td><img src="{{ book.image_url}}"></td>
+	    	<td class="img_col"><img src="{{ book.image_url}}"class="img-thumbnail"></td>
 	    	<td><a href="{{ book.amazon_url}}"> Amazon URL </a></td>
 	    	<td>{{ book.asin}}</td>
 	    </tr>    
 	</table>
-	    
-	</table>
-	
 	</div>
 {% endblock %}

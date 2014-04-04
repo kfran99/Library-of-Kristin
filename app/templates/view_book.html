@@ -3,26 +3,41 @@
 	<h1>BOOK</h1>
 	<div class="col-md-2">
 	</div>
-	<div id="book" class="col-md-8">
+	<div id="book" class="col-md-12">
 	<table class="table">
 		<tr>
-			<th>Image</th>
+			<th class="img_detail">Image</th>
 			<th>Title</th>
 			<th>Author</th>
 			<th>Genre</th>
 			<th>Description</th>
-			<th>Request to Borrow</th>
+			{% if status == "Available" %}
+				<th>Request to Borrow</th>
+			{% endif %}
+			<th>Availability</th>
+			{% if session['admin'] and status=="Checked Out" %}
+				<th>Check in Book</th>
+			{% endif %}
 			<th>Buy from Amazon</th>
 		</tr>
 
 
 	    <tr>
-	    	<td><img src="{{ book.image_url}}"></td>
+	    	<td><img src="{{ book.image_url}}" class="img_detail"></td>
 	    	<td>{{ book.title }}</td>
 	    	<td>{{ book.author }}</td>
 	    	<td>{{ book.genre }}</td>
 	    	<td>{{ book.description }}</td>
-	    	<td>{{ book.status }}</td>
+	    	{% if status == "Available" %}
+	    		<td><a href="{{ url_for('book_request', id=book.id) }}">Request to Borrow Book</a></td>
+	    	{% endif %}	
+	    	<td>{{ status }}<br/><br/>
+	    		<p>
+	    		This book has been checked out: {{ book.history | length }} times.</p>
+	    	{% if session['admin'] and status=="Checked Out" %}
+	    		<td><a href="{{url_for('book_update_status', id=book.id, status = status) }}">Check in Book</a></td>
+			{% endif %}	
+	    	</td>
 	    	<td><a href="{{ book.amazon_url }}">Buy from Amazon</a></td>
 	    		    	
 	    </tr>    

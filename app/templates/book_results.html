@@ -3,27 +3,25 @@
 	<h1> Results </h1>
 	<div class="col-md-2">
 	</div>
-	<div id="book_results" class="col-md-8">
-	<table class="table">
+	<div id="book_results" class="col-md-12">
+	<table class="table table-striped">
 		<tr>
-			<th>Image</th>
+			<th class="img_col">Image</th>
 			<th>Title</th>
 			<th>Author</th>
 			<th>Genre</th>
 			<th>Description</th>
-			<th>Request to Borrow</th>
 			<th>Buy from Amazon</th>
 		</tr>
 
 	{% for book in book_results %}
 	    <tr>
-	    	<td><img src="{{ book.image_url}}"></td>
-	    	<td><a href="/book/{{ book.id }}">{{book.title}}</a></td>
+	    	<td class="img_col"><a href="/book/{{ book.id }}"><img src="{{ book.image_url}}"class="img-thumbnail"></a>Click on image to view book.</td>
+	    	<td>{{ book.title }}</td>
 	    	<td>{{ book.author }}</td>
 	    	<td>{{ book.genre }}</td>
 	    	<td>{{ book.description }}</td>
-	    	<td></td>
-	    	<td><a href="{{ book.amazon_url }}">Buy from Amazon</a></td>
+	    	<td><a href="{{ book.amazon_url }}">Buy book from Amazon</a></td>
 	    		    	
 	    </tr>    
 	{% endfor %}
