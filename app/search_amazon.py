@@ -17,8 +17,8 @@ def get_book_info(asin):
 	#to get image for specific book by ASIN
 	#http://docs.aws.amazon.com/AWSECommerceService/latest/DG/CHAP_response_elements.html#LargeImage	
 	image_url = api.item_lookup(ItemId=asin, 
-		                         IdType="ASIN", 
-		                         ResponseGroup="Images")
+		                        IdType="ASIN", 
+		                        ResponseGroup="Images")
 
 	#to get description from editorial review
 	#http://docs.aws.amazon.com/AWSECommerceService/latest/DG/RG_EditorialReview.html 

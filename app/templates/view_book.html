@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-	<h1>BOOK</h1>
+	<h1>{{ book.title }}</h1>
 	<div class="col-md-2">
 	</div>
 	<div id="book" class="col-md-12">
 	<table class="table">
 		<tr>
-			<th class="img_detail">Image</th>
-			<th>Title</th>
+			<th class="img_detail"></th>
 			<th>Author</th>
 			<th>Genre</th>
 			<th>Description</th>
@@ -18,13 +17,12 @@
 			{% if session['admin'] and status == "Checked Out" %}
 				<th>Check in Book</th>
 			{% endif %}
-			<th>Buy from Amazon</th>
+			<th>Link to Amazon</th>
 		</tr>
 
 
 	    <tr>
 	    	<td><img src="{{ book.image_url}}" class="img_detail"></td>
-	    	<td>{{ book.title }}</td>
 	    	<td>{{ book.author }}</td>
 	    	<td>{{ book.genre }}</td>
 	    	<td>{{ book.description }}</td>
