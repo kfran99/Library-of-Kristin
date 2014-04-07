@@ -18,7 +18,7 @@ book." I linked up Twilio to the request link.  When a user requests a book, I g
 
 I hope to deploy my web app soon so that my friends can actually use it!
 
-![alt text](https://raw.githubusercontent.com/kfran99/Library-of-Kristin/master/app/static/images/SearchScreen.png "Search Screen")
+![alt text](https://raw.githubusercontent.com/kfran99/Library-of-Kristin/master/app/static/images/SearchResults.png "Search Screen")
 
 ![alt text](https://raw.githubusercontent.com/kfran99/Library-of-Kristin/master/app/static/images/RequestBook.png "Request Book Screen")
 
