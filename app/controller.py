@@ -21,14 +21,13 @@ twilio_phone = config.twilio_phone
 def index():
 	if "email" in session:
 		user = model.session.query(model.User).filter_by(email=session["email"]).one()
-		#user_books_status = model.session.query(model.BookStatus).filter_by(BookStatus.requester_id = user.id, BookStatus.id = book.id).all()
 	else:
 		user = None
 	return render_template("index.html", title="Home", user=user)
 
 @app.route("/user/new", methods=["GET"])
 def new_user_form():
-	#Display HTML from to create a new user
+	#Display HTML form to create a new user
 	form = RegistrationForm()
 	return render_template("new_user_form.html", form=form)
 
@@ -86,7 +85,6 @@ def user_login():
 
 @app.route("/user/logout")
 def logout():
-	# user = model.session.query(model.User).filter_by(email=session["email"].one()
 	session.clear()
 	flash("You are now logged out.")
 	return redirect("/index")
