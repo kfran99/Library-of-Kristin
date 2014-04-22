@@ -1,6 +1,4 @@
 import amazonproduct
-from lxml import etree as ET
-from lxml import objectify
 import re
 
 api=amazonproduct.API(cfg=".amazon-product-api", locale="us")
