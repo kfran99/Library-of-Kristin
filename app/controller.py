@@ -27,14 +27,14 @@ def index():
 
 @app.route("/user/new", methods=["GET"])
 def new_user_form():
-	"""Display HTML form to create a new user"""
+	#Display HTML form to create a new user
 	form = RegistrationForm()
 	return render_template("new_user_form.html", form=form)
 
 @app.route("/user/new", methods=["POST"])
 def add_new_user():
 	salt = PASSWORD_SALT
-	"""Get data from Registration Form"""
+	#Get data from Registration Form
 	form = RegistrationForm(request.form)
 	if not form.validate():
 		flash("All fields are required.")
@@ -44,11 +44,11 @@ def add_new_user():
 	email = form.email.data
 	password = hashlib.sha1(form.password.data+salt).hexdigest()
 	user_exist = model.session.query(model.User).filter_by(email=email).all()
-	"""check to see if user exists"""
+	#check to see if user exists
 	if user_exist:
 		flash("User account has already been created with this email.")
 		return render_template("login_user.html", form=form)
-	"""create user object"""
+	#create user object
 	user = model.User(given_name=given_name, surname=surname, email=email, password=password, admin=0)
 	model.session.add(user)
 	model.session.commit()
@@ -161,7 +161,7 @@ def add_book():
 	                  asin=asin)
 	book_exist = model.session.query(model.Book).filter_by(title=title).all()
 	form = AmazonSearch()
-	"""if book is already in the database, return to amazon_search"""
+	# if book is already in the database, return to amazon_search
 	if book_exist:	
 	 	flash("Book is already in the database.")
 	 	return render_template("amazon_search.html", form=form, user=user)
@@ -178,16 +178,17 @@ def book_search_form():
 	author = request.form.get("author")
 	
 	if form.validate_on_submit():
-		books_title = model.session.query(model.Book).filter(model.Book.title.ilike("%"+title+"%")).all()
-		books_author = model.session.query(model.Book).filter(model.Book.author.ilike("%"+author+"%")).all()
 		books_query = model.session.query(model.Book)
 		
-		if books_title:
-			books_query = books_query.filter(model.Book.title.ilike("%"+title+"%"))
+		if title:
+			books = books_query.filter(model.Book.title.ilike("%"+title+"%")).all()
 
-		if books_author:
-			books_query = books_query.filter(model.Book.author.ilike("%"+author+"%"))
-		books = books_query.all()
+		elif author:
+			books = books_query.filter(model.Book.author.ilike("%"+author+"%")).all()
+		
+		elif title and author:
+			books = books_query.filter(model.Book.author.ilike("%"+author+"%"), 
+				    model.Book.title.ilike("%"+title+"%")).all()
 
 		if not books:
 			flash("No books were found matching your search terms.")
@@ -211,7 +212,7 @@ def book_request(id):
 		model.session.add(new_request)
 		model.session.commit()
 		flash ("You have requested to borrow this book.")
-		"""Send Twilio message when someone requests to borrow a book"""
+		#Send Twilio message when someone requests to borrow a book
 		message = client.messages.create(body="Kristin, " + requester.given_name + 
 			                             " " + requester.surname + 
 			                             " has requested to borrow the book: " 
@@ -226,7 +227,7 @@ def book_update_status(id):
 		book = model.session.query(model.Book).get(id)
 		requester = model.session.query(model.User).filter_by(email=session["email"]).one()
 		status = model.session.query(model.BookStatus).filter_by(book_id=book.id, checked_in=None).all()
-		"""Checks in specific book if it shows as either requested or checked-out.""" 
+		#Checks in specific book if it shows as either requested or checked-out. 
 		for s in status:
 			if s.checked_in == None:
 				s.checked_in = datetime.now()		
